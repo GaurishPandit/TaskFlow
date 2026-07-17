@@ -1,56 +1,68 @@
 # TaskFlow — Kanban Task Manager (MERN)
 
-A full-stack project management app built with the **MERN stack** (MongoDB, Express, React, Node.js). Users sign up, create projects, and manage tasks on a drag-and-drop Kanban board with three columns (To Do / In Progress / Done).
+A full-stack project management application built with the **MERN stack** (MongoDB, Express, React, Node.js). Users can register, create projects, and manage tasks on a drag-and-drop Kanban board with three columns (**To Do**, **In Progress**, and **Done**).
 
-> Built as a portfolio project to demonstrate authentication, REST API design, protected routes, and a polished React UI.
+> Built as a portfolio project to demonstrate authentication, REST API design, protected routes, responsive UI design, and full-stack deployment.
+
+---
+
+## 🌐 Live Demo
+
+**Frontend:** https://task-sync-five.vercel.app
+
+**Backend API:** https://tasksync-api-bdmb.onrender.com
 
 ---
 
 ## ✨ Features
 
-- **JWT authentication** — register / login with hashed passwords (bcrypt), token-based sessions
-- **Protected API + routes** — middleware guards every project/task endpoint; the React app redirects unauthenticated users
-- **Projects** — create, color-code, and delete projects (deleting a project cascades to its tasks)
-- **Kanban board** — active tasks in To Do / In Progress columns with **native HTML5 drag-and-drop** and optimistic UI updates; a one-click checkbox marks a task complete (or reopens it), moving it into a collapsible **Completed** section while keeping the record for analytics
-- **Analytics dashboard** — completion rate, task counts, weekly/monthly progress charts, and per-project progress bars, all rendered as **hand-built SVG charts (no chart library)**
-- **Deadline tracking** — upcoming and overdue tasks surfaced automatically, sorted by due date
-- **Task details** — title, description, priority (low/medium/high), status, and due date
-- **Ownership scoping** — users can only ever see and modify their own data
-- **Clean, responsive dark UI** — no component library; hand-written CSS
-- **Extras** — rate limiting, centralized error handling, a seed script with demo data
+- **JWT Authentication** — Secure registration and login using hashed passwords (bcrypt) and JSON Web Tokens.
+- **Protected Routes & APIs** — Middleware secures all project and task endpoints, with automatic client-side redirection for unauthenticated users.
+- **Project Management** — Create, color-code, and delete projects. Deleting a project automatically removes all associated tasks.
+- **Kanban Board** — Native HTML5 drag-and-drop between **To Do**, **In Progress**, and **Done** columns with optimistic UI updates.
+- **Task Management** — Create, edit, delete, and organize tasks with title, description, priority, status, and due date.
+- **Completed Tasks Section** — Mark tasks complete with one click and manage completed tasks separately while preserving analytics.
+- **Analytics Dashboard** — Completion rate, task counts, weekly/monthly progress, deadline tracking, and per-project statistics using custom SVG charts.
+- **Deadline Tracking** — Automatically highlights upcoming and overdue tasks.
+- **User Isolation** — Every user can access only their own projects and tasks.
+- **Responsive Dark UI** — Fully responsive interface built using custom CSS without any component libraries.
+- **Additional Features** — API rate limiting, centralized error handling, and demo data seeding.
 
 ---
 
 ## 🧱 Tech Stack
 
-| Layer     | Tech                                                        |
-| --------- | ---------------------------------------------------------- |
-| Frontend  | React 18, React Router, Axios, Vite, Context API           |
-| Backend   | Node.js, Express, JWT, bcryptjs, express-rate-limit        |
-| Database  | MongoDB with Mongoose                                       |
+| Layer | Technologies |
+|--------|--------------|
+| Frontend | React 18, React Router, Axios, Vite, Context API |
+| Backend | Node.js, Express.js, JWT, bcryptjs, express-rate-limit |
+| Database | MongoDB Atlas, Mongoose |
+| Deployment | Vercel (Frontend), Render (Backend), MongoDB Atlas |
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 taskflow/
-├── server/                 # Express API
+├── server/
 │   └── src/
-│       ├── config/         # DB connection
-│       ├── models/         # User, Project, Task (Mongoose schemas)
-│       ├── controllers/    # Route logic (incl. analytics aggregation)
-│       ├── middleware/      # auth (JWT) + error handling
-│       ├── routes/         # /auth, /projects, /tasks, /analytics
-│       ├── utils/seed.js   # demo data
-│       └── index.js        # app entry
-└── client/                 # React (Vite) frontend
+│       ├── config/
+│       ├── controllers/
+│       ├── middleware/
+│       ├── models/
+│       ├── routes/
+│       ├── utils/
+│       │   └── seed.js
+│       └── index.js
+│
+└── client/
     └── src/
-        ├── api/            # axios instance + interceptors
-        ├── context/        # AuthContext
-        ├── components/     # Navbar, TaskCard, TaskModal, ProtectedRoute
-        │   └── charts/     # DonutChart, BarChart (plain SVG)
-        ├── pages/          # Login, Register, Dashboard, Board, Analytics
+        ├── api/
+        ├── components/
+        │   └── charts/
+        ├── context/
+        ├── pages/
         └── styles/
 ```
 
@@ -59,66 +71,126 @@ taskflow/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- MongoDB running locally, **or** a free [MongoDB Atlas](https://www.mongodb.com/atlas) connection string
 
-### 1. Backend
+- Node.js 18+
+- MongoDB Atlas connection string (recommended) or a local MongoDB instance
+
+### Backend Setup
 
 ```bash
 cd server
 npm install
-cp .env.example .env        # then edit .env (set MONGO_URI and JWT_SECRET)
-npm run seed                # optional: creates a demo account
-npm run dev                 # starts API on http://localhost:5000
+cp .env.example .env
 ```
 
-**Demo login (after seeding):** `demo@taskflow.dev` / `password123`
+Update the `.env` file with your own values:
 
-### 2. Frontend
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+JWT_EXPIRES_IN=7d
+CLIENT_URL=http://localhost:5173
+```
+
+(Optional) Seed demo data:
+
+```bash
+npm run seed
+```
+
+Start the backend:
+
+```bash
+npm run dev
+```
+
+---
+
+### Frontend Setup
 
 ```bash
 cd client
 npm install
-npm run dev                 # starts app on http://localhost:5173
 ```
 
-Open **http://localhost:5173**. The Vite dev server proxies `/api` to the backend, so no extra config is needed locally.
+Create a `.env` file:
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Run the frontend:
+
+```bash
+npm run dev
+```
+
+Visit:
+
+```
+http://localhost:5173
+```
 
 ---
 
 ## 🔌 API Reference
 
-All `/projects` and `/tasks` routes require an `Authorization: Bearer <token>` header.
+All `/projects`, `/tasks`, and `/analytics` routes require:
 
-| Method | Endpoint              | Description                     |
-| ------ | --------------------- | ------------------------------- |
-| POST   | `/api/auth/register`  | Create account, returns a token |
-| POST   | `/api/auth/login`     | Log in, returns a token         |
-| GET    | `/api/auth/me`        | Get current user                |
-| GET    | `/api/projects`       | List your projects              |
-| POST   | `/api/projects`       | Create a project                |
-| PUT    | `/api/projects/:id`   | Update a project                |
-| DELETE | `/api/projects/:id`   | Delete a project + its tasks    |
-| GET    | `/api/tasks?project=` | List tasks (optionally by project) |
-| POST   | `/api/tasks`          | Create a task                   |
-| PUT    | `/api/tasks/:id`      | Update a task (status, etc.)    |
-| DELETE | `/api/tasks/:id`      | Delete a task                   |
-| GET    | `/api/analytics/summary?range=week\|month` | Totals, progress timeline, per-project & deadline data |
+```
+Authorization: Bearer <token>
+```
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/login` | Login and receive JWT |
+| GET | `/api/auth/me` | Get current authenticated user |
+| GET | `/api/projects` | Retrieve all projects |
+| POST | `/api/projects` | Create a new project |
+| PUT | `/api/projects/:id` | Update project |
+| DELETE | `/api/projects/:id` | Delete project and associated tasks |
+| GET | `/api/tasks?project=` | Retrieve tasks |
+| POST | `/api/tasks` | Create task |
+| PUT | `/api/tasks/:id` | Update task |
+| DELETE | `/api/tasks/:id` | Delete task |
+| GET | `/api/analytics/summary?range=week\|month` | Analytics summary |
 
 ---
 
-## 🗺️ Ideas for Extending
+## 🛠 Deployment
 
-Good next steps if you want to keep building (and talking about it in interviews):
+The application is deployed using:
 
-- Reorder tasks within a column and persist `order`
-- Team projects with shared members and role-based access
-- Task comments and activity log
-- Deploy: API on Render/Railway, client on Vercel/Netlify, DB on Atlas
-- Unit/integration tests (Jest + Supertest, React Testing Library)
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Database:** MongoDB Atlas
+
+For production deployment:
+
+1. Deploy the Express backend to Render.
+2. Deploy the React frontend to Vercel.
+3. Configure environment variables:
+   - `MONGO_URI`
+   - `JWT_SECRET`
+   - `JWT_EXPIRES_IN`
+   - `CLIENT_URL`
+   - `VITE_API_URL`
+4. Update `CLIENT_URL` in the backend after deploying the frontend.
+
+---
+
+## 🗺️ Future Improvements
+
+- Reorder tasks within a column with persistent ordering
+- Team workspaces and shared projects
+- Role-based permissions
+- Task comments and activity history
+- Email reminders and notifications
+- Unit and integration testing
 
 ---
 
 ## 📄 License
 
-MIT
+This project is licensed under the **MIT License**.
